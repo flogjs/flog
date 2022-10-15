@@ -29,9 +29,9 @@ example for a module that emulates `console.log`.
 #include "../flog/src/flog.h"
 
 static JSValue print(JSContext* context,
-                      JSValueConst target,
-                      int argc,
-                      JSValueConst* argv) {
+                     JSValueConst target,
+                     int argc,
+                     JSValueConst* argv) {
   if (argc < 1) return JS_UNDEFINED;
   const char* str = JS_ToCString(context, * argv);
   printf("%s\n", str);
