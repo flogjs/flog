@@ -69,11 +69,11 @@ static int args3(int argc, char* argv[]) {
 }
 
 int flog_command_args(int argc, char* argv[]) {
-  FlogApp* app = flog_app_new();
+  FlogApp* app = flog_new_app();
 
   int result = argc == 2 ? args2(argc, argv) : args3(argc, argv);
 
-  flog_app_dispose(app);
+  flog_dispose_app(app);
 
   return 0;
 }
