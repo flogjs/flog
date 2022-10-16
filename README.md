@@ -14,10 +14,28 @@ minimal core.
 
 ### Getting started
 
-On Linux, run `make` to compile. Run the resulting `flog` executeable with a
-JS file as the first argument.
+On Linux, run `make` to compile. This will result in a `flog` executable in the
+same directory. 
 
-Currently supported are `.js` and `.so` imports.
+Create an `app.js` file in the same directory.
+
+```js
+log("Hello, world!");
+```
+
+You can now run flog with this file as the first argument.
+
+```sh
+./flog app.js
+```
+
+Besides the standard JavaScript language features introduced by QuickJS, flog
+currently has a utility function `log` in the global namespace that emulates
+`console.log`. This will be later removed in official releases.
+
+In addition to normal JavaScript syntax, you can use `import` and `export`
+declarations to import and export code via modules. Currently supported are
+`.js` and `.so` imports.
 
 ### Creating a C module
 
