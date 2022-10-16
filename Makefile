@@ -18,18 +18,18 @@ init-submodules:
 	fi
 
 $(QJS_OS): init-submodules
-	$(CC) -lm -DCONFIG_VERSION=$(QJS_VERSION) -O -c $(QJS_SRCS)
+	$(CC) -DCONFIG_VERSION=$(QJS_VERSION) -O -c $(QJS_SRCS) -lm
 
 $(QJS_A): $(QJS_OS)
 	ar rcs $@ $(QJS_OBJS)
 	ranlib $@
 
 $(MAIN): $(QJS_A)
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. -lm $(SRCS) $(QJS_A) $(CFLAGS)
+	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
 	rm -f $(QJS_OBJS)
 
 main:
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. -lm $(SRCS) $(QJS_A) $(CFLAGS)
+	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
 
 clean:
 	rm f $(MAIN)
