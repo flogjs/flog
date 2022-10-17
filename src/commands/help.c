@@ -22,8 +22,6 @@ void line(char const* operation, char const* explanation) {
   flog_string_print("  flog %-20s %s\n", operation, explanation);
 }
 
-static const char* FLOG_VERSION = "0.1.0";
-
 int flog_command_help() {
   flog_string_print("flog %s\n", FLOG_VERSION);
   flog_string_print("quickjs %s\n\n", QJS_VERSION);
