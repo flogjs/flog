@@ -5,7 +5,7 @@ minimal core.
 
 ## Design goals
 
-* Minimal core as a thin wrapper around QuickJS
+* Minimal core as a thin wrapper around QuickJS ✓
 * Executeable and module manager in one
 * Namespaced, officially supported standard library (`std`)
 * Third-party, scoped module area
@@ -35,7 +35,7 @@ currently has a utility function `log` in the global namespace that emulates
 
 In addition to normal JavaScript syntax, you can use `import` and `export`
 declarations to import and export code via modules. Currently supported are
-`.js` and `.so` imports.
+`.js`, `.json` and `.so` imports.
 
 ### Creating a C module
 
@@ -78,7 +78,7 @@ JSModuleDef* flog_init_module(JSContext* context, const char* name) {
 }
 ```
 
-Compile with a `Makefile` that references that original `libqjs.a` artefact
+Compile with a `Makefile` that references the original `libqjs.a` artefact
 created when having compiled `flog`.
 
 ```Makefile

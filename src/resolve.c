@@ -29,9 +29,9 @@ char* flog_resolve_module(JSContext* context,
   // absolute path
   if (specifier[0] == '/') {
     char* buffer = flog_string_copy(specifier);
-    char* _realpath = realpath(buffer, NULL);
+    char* resolved = realpath(buffer, NULL);
     free(buffer);
-    return _realpath;
+    return resolved;
   }
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
