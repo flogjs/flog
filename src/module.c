@@ -34,25 +34,17 @@ void show_error(JSContext* context) {
   JS_FreeValue(context, exception);
 }
 
-/* Load a module from a JavaScript (.js) file. */
-static JSModuleDef* load_js(const char* path, JSContext* context, bool main) {
-  JSModuleDef* module_def;
-  char* code = flog_file_read(path);
-  DynBuf dynbuf;
-  
-  dbuf_init(&dynbuf);
+static JSModuleDef* create_module(JSContext* context,
+                                  DynBuf* dynbuf,
+                                  const char* path,
+                                  bool main) {
+  dbuf_putc(dynbuf, '\0');
 
-  for (const char *i = code; *i != '\0'; i++) {
-    dbuf_putc(&dynbuf, *i);
-  }
-
-  dbuf_putc(&dynbuf, '\0');
-
-  char* buffer = (char*) dynbuf.buf;
-  size_t size = dynbuf.size - 1;
+  char* buffer = (char*) dynbuf->buf;
+  size_t size = dynbuf->size - 1;
   int flags = JS_EVAL_TYPE_MODULE | JS_EVAL_FLAG_COMPILE_ONLY;
   JSValue value = JS_Eval(context, buffer, size, path, flags);
-  dbuf_free(&dynbuf);
+  dbuf_free(dynbuf);
 
   if (!JS_IsException(value)) {
     if (main) {
@@ -69,17 +61,46 @@ static JSModuleDef* load_js(const char* path, JSContext* context, bool main) {
     show_error(context);
   }
 
+  return JS_VALUE_GET_PTR(value);
+
+}
+
+/* Load a module from a JavaScript (.js) file. */
+static JSModuleDef* load_js(const char* path, JSContext* context, bool main) {
   flog_log("static load_js\n");
 
-  module_def = JS_VALUE_GET_PTR(value);
+  DynBuf dynbuf;
+  dbuf_init(&dynbuf);
 
-  return module_def;
+  char* code = flog_file_read(path);
+  for (const char *i = code; *i != '\0'; i++) {
+    dbuf_putc(&dynbuf, *i);
+  }
+  free(code);
+
+  return create_module(context, &dynbuf, path, main);
 }
 
 /* Load a module from a JavaScript Object Notation (.json) file. */
 static JSModuleDef* load_json(const char* path, JSContext* context, bool main) {
   flog_log("static load_json\n");
-  return NULL;
+  static const char pre[] = "export default JSON.parse(`";
+  static const char post[] = "`);";
+  
+  DynBuf dynbuf;
+  dbuf_init(&dynbuf);
+  
+  dbuf_put(&dynbuf, (const uint8_t *) pre, flog_string_length(pre));
+
+  char* code = flog_file_read(path);
+  for (const char *i = code; *i != '\0'; i++) {
+    dbuf_putc(&dynbuf, *i);
+  }
+  free(code);
+
+  dbuf_put(&dynbuf, (const uint8_t *) post, flog_string_length(post));
+
+  return create_module(context, &dynbuf, path, false);
 }
 
 /* Load a module from a shared object (.so) file.  */
@@ -135,11 +156,11 @@ loader resolve(char const* path) {
 JSModuleDef* flog_module_load(JSContext* context,
                               const char* path,
                               void* opaque) {
-  printf("flog_module_load: %s\n", path);
+  flog_log("flog_module_load: %s\n", path);
   return resolve(path)(path, context, false);
 }
 
 JSModuleDef* flog_module_init(JSContext* context, const char* path) {
-  printf("flog_module_load: %s\n", path);
+  flog_log("flog_module_load: %s\n", path);
   return resolve(path)(path, context, true);
 }

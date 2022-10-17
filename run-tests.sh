@@ -1,4 +1,7 @@
 #!/bin/sh
 
-./flog test/imports/main.js
-./flog test/import-so/main.js
+for file in test/*; do
+  if [ -d "$file" ]; then
+    ./flog $file/main.js
+  fi
+done
