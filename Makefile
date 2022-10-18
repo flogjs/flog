@@ -1,7 +1,6 @@
 MAIN=flog
-CFLAGS=-O3 -o $(MAIN) -rdynamic
+CFLAGS=-Wall -O3 -o $(MAIN) -rdynamic
 SRCS=$(wildcard src/*.c src/**/*.c)
-FLOG_VERSION='"$(shell cat VERSION)"'
 
 QJS_DIR=deps/quickjs
 QJS_FILES=cutils.c libbf.c libregexp.c libunicode.c quickjs.c
@@ -26,13 +25,11 @@ $(QJS_A): $(QJS_OS)
 	ranlib $@
 
 $(MAIN): $(QJS_A)
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -DFLOG_VERSION=$(FLOG_VERSION)\
-		-L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
+	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
 	rm -f $(QJS_OBJS)
 
 main:
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -DFLOG_VERSION=$(FLOG_VERSION)\
-		-L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
+	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
 
 clean:
 	rm f $(MAIN)

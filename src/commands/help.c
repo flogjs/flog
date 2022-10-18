@@ -16,6 +16,7 @@
  */
 
 #include "./base.h"
+#include "../version.h"
 
 void line(char const*, char const*);
 void line(char const* operation, char const* explanation) {
