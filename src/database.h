@@ -18,9 +18,9 @@
 #ifndef FLOG_DATABASE_H_
 #define FLOG_DATABASE_H_
 
-typedef struct FlogDatabase {
+typedef struct Database {
   int (* has)(char* name);
   const char* (* get_path)(char* name);
-} FlogDatabase;
+} Database;
 
 #endif

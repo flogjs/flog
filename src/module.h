@@ -22,16 +22,16 @@
 #include "file.h"
 #include "engine.h"
 
-struct FlogModule {
-  struct FlogModule* next;
+struct Module {
+  struct Module* next;
 };
-typedef struct FlogModule FlogModule;
+typedef struct Module Module;
 
 typedef JSModuleDef* (*Export)(JSContext* context, const char* name);
-typedef JSModuleDef* (*loader)(const char* path, JSContext* context, bool main);
+typedef JSModuleDef* (*Loader)(JSContext* context, const char* path, bool main);
 
-JSModuleDef* flog_module_load(JSContext* context,
+JSModuleDef* flog_load_module(JSContext* context,
                               const char* name,
                               void* opaque);
-JSModuleDef* flog_module_init(JSContext* context, const char* name);
+JSModuleDef* flog_load_main_module(JSContext* context, const char* name);
 #endif

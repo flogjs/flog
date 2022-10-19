@@ -66,7 +66,7 @@ static JSModuleDef* create_module(JSContext* context,
 }
 
 /* Load a module from a JavaScript (.js) file. */
-static JSModuleDef* load_js(const char* path, JSContext* context, bool main) {
+static JSModuleDef* load_js(JSContext* context, const char* path, bool main) {
   flog_log("static load_js\n");
 
   DynBuf dynbuf;
@@ -82,7 +82,7 @@ static JSModuleDef* load_js(const char* path, JSContext* context, bool main) {
 }
 
 /* Load a module from a JavaScript Object Notation (.json) file. */
-static JSModuleDef* load_json(const char* path, JSContext* context, bool main) {
+static JSModuleDef* load_json(JSContext* context, const char* path, bool main) {
   flog_log("static load_json\n");
   static const char pre[] = "export default JSON.parse(`";
   static const char post[] = "`);";
@@ -103,8 +103,8 @@ static JSModuleDef* load_json(const char* path, JSContext* context, bool main) {
   return create_module(context, &dynbuf, path, false);
 }
 
-/* Load a module from a shared object (.so) file.  */
-static JSModuleDef* load_so(const char* path, JSContext* context, bool main) {
+/* Load a module from a shared object (.so) file. */
+static JSModuleDef* load_so(JSContext* context, const char* path, bool main) {
   flog_log("static load_so\n");
   void* lib = dlopen(path, RTLD_LAZY);
   if (!lib) {
@@ -131,15 +131,15 @@ static JSModuleDef* load_so(const char* path, JSContext* context, bool main) {
  * If the module hasn't been synced yet to the local project, flog will sync
  * the current version in the database to the modules directory.
  */
-static JSModuleDef* load_lib(const char* name, JSContext* context, bool main) {
-  FlogDatabase* database = flog_database();
-  if (!database->has((char*) name)) {
+static JSModuleDef* load_lib(JSContext* context, const char* path, bool main) {
+  Database* database = flog_database();
+  if (!database->has((char*) path)) {
 //    char* copy = flog_string_copy(name);
   }
-  return load_js(database->get_path((char*) name), context, false);
+  return load_js(context, database->get_path((char*) path), false);
 }
 
-loader resolve(char const* path) {
+static Loader resolve(char const* path) {
   if (flog_string_endswith(path, ".js")) {
     return load_js;
   }
@@ -153,14 +153,14 @@ loader resolve(char const* path) {
   return load_lib;
 }
 
-JSModuleDef* flog_module_load(JSContext* context,
+JSModuleDef* flog_load_module(JSContext* context,
                               const char* path,
                               void* opaque) {
   flog_log("flog_module_load: %s\n", path);
-  return resolve(path)(path, context, false);
+  return resolve(path)(context, path, false);
 }
 
-JSModuleDef* flog_module_init(JSContext* context, const char* path) {
+JSModuleDef* flog_load_main_module(JSContext* context, const char* path) {
   flog_log("flog_module_load: %s\n", path);
-  return resolve(path)(path, context, true);
+  return resolve(path)(context, path, true);
 }

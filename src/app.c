@@ -17,37 +17,35 @@
 
 #include "app.h"
 
-static FlogApp* app = 0;
+static App* app = 0;
 
-FlogApp* flog_new_app() {
+void flog_new_app() {
   if (app == 0) {
     app = calloc(1, sizeof(*app));
-    app->engine = flog_engine_new();
-
-    return app;
+    app->engine = flog_new_engine();
   };
 }
 
-void flog_dispose_app(FlogApp* app2) {
-  if (app2 != 0) {
-    flog_engine_dispose(app2->engine);
-    free(app2);
+void flog_dispose_app() {
+  if (app != 0) {
+    flog_dispose_engine(app->engine);
+    free(app);
   }
 }
 
-FlogEngine* flog_engine() {
+Engine* flog_engine() {
   return app->engine;
 }
 
-FlogDatabase* flog_database() {
+Database* flog_database() {
   return app->database;
 }
 
-FlogModule* flog_modules() {
+Module* flog_modules() {
   return app->modules;
 }
 
-void flog_add_module(FlogModule* mod) {
+void flog_add_module(Module* mod) {
   if (app->modules == 0) { // no modules yet
     mod->next = mod;
     app->modules = mod;

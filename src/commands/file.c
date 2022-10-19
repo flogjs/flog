@@ -20,7 +20,7 @@
 #include "../app.h"
 
 int flog_command_file(char* path, int argc, char* argv[]) {
-  flog_module_init(flog_engine()->context, argv[1]);
+  flog_load_main_module(flog_engine()->context, argv[1]);
 
   return 0;
 }

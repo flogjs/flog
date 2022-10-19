@@ -24,12 +24,12 @@
 #include "../deps/quickjs/quickjs.h"
 #include "resolve.h"
 
-typedef struct FlogEngine {
+typedef struct Engine {
   JSRuntime* runtime;
   JSContext* context;
-} FlogEngine;
+} Engine;
 
-FlogEngine* flog_engine_new();
-void flog_engine_dispose(FlogEngine*);
+Engine* flog_new_engine();
+void flog_dispose_engine(Engine*);
 
 #endif

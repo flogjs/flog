@@ -24,16 +24,16 @@
 #include "module.h"
 #include "database.h"
 
-typedef struct FlogApp {
-  FlogEngine* engine;
-  FlogDatabase* database;
-  FlogModule* modules;
-} FlogApp;
+typedef struct App {
+  Engine* engine;
+  Database* database;
+  Module* modules;
+} App;
 
-FlogApp* flog_new_app();
-void flog_dispose_app(FlogApp*);
-FlogEngine* flog_engine();
-FlogDatabase* flog_database();
-FlogModule* flog_modules();
-void flog_add_module(FlogModule* mod);
+void flog_new_app();
+void flog_dispose_app();
+Engine* flog_engine();
+Database* flog_database();
+Module* flog_modules();
+void flog_add_module(Module* mod);
 #endif

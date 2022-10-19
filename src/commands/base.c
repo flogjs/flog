@@ -19,8 +19,6 @@
 #include "../string.h"
 #include "../app.h"
     
-//flog::Database* database;
-
 // <file>.js, sync, list
 static int args2(int argc, char* argv[]) {
   if (argc != 2) {
@@ -69,11 +67,11 @@ static int args3(int argc, char* argv[]) {
 }
 
 int flog_command_args(int argc, char* argv[]) {
-  FlogApp* app = flog_new_app();
+  flog_new_app();
 
   int result = argc == 2 ? args2(argc, argv) : args3(argc, argv);
 
-  flog_dispose_app(app);
+  flog_dispose_app();
 
-  return 0;
+  return result;
 }
