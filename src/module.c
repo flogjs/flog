@@ -23,13 +23,20 @@ void show_error(JSContext* context) {
   JSValue exception = JS_GetException(context);
   int is_error = JS_IsError(context, exception);
   if (is_error) {
-    JSValue value = JS_GetPropertyStr(context, exception, "stack");
-    if (!JS_IsUndefined(value)) {
-      const char* str = JS_ToCString(context, value);
+    JSValue message = JS_GetPropertyStr(context, exception, "message");
+    if (!JS_IsUndefined(message)) {
+      const char* str = JS_ToCString(context, message);
       printf("%s\n", str);
       JS_FreeCString(context, str);
     }
-    JS_FreeValue(context, value);
+    JS_FreeValue(context, message);
+    JSValue stack = JS_GetPropertyStr(context, exception, "stack");
+    if (!JS_IsUndefined(stack)) {
+      const char* str = JS_ToCString(context, stack);
+      printf("%s\n", str);
+      JS_FreeCString(context, str);
+    }
+    JS_FreeValue(context, stack);
   }
   JS_FreeValue(context, exception);
 }
@@ -49,6 +56,9 @@ static JSModuleDef* create_module(JSContext* context,
   if (!JS_IsException(value)) {
     if (main) {
       value = JS_EvalFunction(context, value);
+      if (JS_IsException(value)) {
+        show_error(context);
+      }
     }
   } else {
     show_error(context);
@@ -56,23 +66,26 @@ static JSModuleDef* create_module(JSContext* context,
     return NULL;
   }
 
-  const char* str = JS_ToCString(context, value);
-  if (!str) {
-    show_error(context);
-  }
+  JSModuleDef* module_def = JS_VALUE_GET_PTR(value);
+  JS_FreeValue(context, value);
 
-  return JS_VALUE_GET_PTR(value);
+  return module_def;
 
 }
 
 /* Load a module from a JavaScript (.js) file. */
 static JSModuleDef* load_js(JSContext* context, const char* path, bool main) {
-  flog_log("static load_js\n");
+  flog_log("static load_js: %s\n", path);
+
+  char* code = flog_file_read(path);
+  if (code == NULL) {
+    flog_log("Cannot find path: %s\n", path);
+    return NULL;
+  }
 
   DynBuf dynbuf;
   dbuf_init(&dynbuf);
 
-  char* code = flog_file_read(path);
   for (const char *i = code; *i != '\0'; i++) {
     dbuf_putc(&dynbuf, *i);
   }

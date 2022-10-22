@@ -20,6 +20,9 @@
 char* flog_file_read(const char* path) {
   // read file into buffer
   FILE* file = fopen(path, "r");
+  if (file == NULL) {
+    return NULL;
+  }
   fseek(file, 0, SEEK_END);
   long length = ftell(file);
   fseek(file, 0, SEEK_SET);

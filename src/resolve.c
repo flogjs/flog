@@ -40,14 +40,21 @@ char* flog_resolve_module(JSContext* context,
 
   char* from_directory = flog_dirname(from);
   flog_log("  [from_directory] = %s\n", from_directory);
-  char* directory = flog_string_glue(cwd, from_directory);
-  free(from_directory);
+  char* directory;
+  if (flog_string_length(from_directory) == 0) {
+    // from is not qualified, attach to cwd
+    directory = flog_string_glue(cwd, from_directory);
+    free(from_directory);
+  } else {
+    // from is already qualified
+    directory = from_directory;
+  }
   flog_log("  [directory] = %s\n", directory);
   flog_log("  [specifier] = %s\n", specifier);
   char* unresolved = flog_string_glue(directory, specifier);
   free(directory);
   char* resolved = realpath(unresolved, NULL);
   free(unresolved);
-  flog_log("  return = %s\n", resolved);
+  flog_log("  return = %s\n\n", resolved);
   return resolved;
 }
