@@ -17,6 +17,11 @@
 
 #include "file.h"
 
+bool flog_file_exists(const char* file) {
+  struct stat st = {0};
+  return stat(file, &st) == 0;
+}
+
 char* flog_file_read(const char* path) {
   // read file into buffer
   FILE* file = fopen(path, "r");
@@ -32,6 +37,15 @@ char* flog_file_read(const char* path) {
   fclose(file);
 
   return buffer;
+}
+
+void flog_write_file(const char path[], const char data[]) {
+  FILE* file = fopen(path, "w");
+  if (file == NULL) {
+    return;
+  }
+  fprintf(file, "%s\n", data);
+  fclose(file);
 }
 
 int flog_file_new_directory(const char* path) {

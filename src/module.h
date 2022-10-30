@@ -34,4 +34,5 @@ JSModuleDef* flog_load_module(JSContext* context,
                               const char* name,
                               void* opaque);
 JSModuleDef* flog_load_main_module(JSContext* context, const char* name);
+JSModuleDef* flog_run_code(JSContext*, char*);
 #endif

@@ -27,7 +27,7 @@ static JSValue print(JSContext* context,
   return JS_UNDEFINED;
 }
 
-Engine* flog_new_engine() {
+Engine* flog_init_engine() {
   Engine* engine = calloc(1, sizeof(* engine));
   engine->runtime = JS_NewRuntime();
   engine->context = JS_NewContext(engine->runtime);
@@ -50,7 +50,7 @@ Engine* flog_new_engine() {
   return engine;
 }
 
-void flog_dispose_engine(Engine* engine) {
+void flog_teardown_engine(Engine* engine) {
   JS_FreeContext(engine->context);
   JS_FreeRuntime(engine->runtime);
   free(engine);

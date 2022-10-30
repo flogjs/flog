@@ -17,11 +17,12 @@
 
 #ifndef FLOG_RESOLVE_H_
 #define FLOG_RESOLVE_H_
+
 #include <unistd.h>
 #include <limits.h>
 
-#include "flog.h"
 #include "string.h"
+#include "engine.h"
 
 char* flog_dirname(const char*);
 char* flog_resolve_module(JSContext*, char const*, char const*, void*);

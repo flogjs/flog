@@ -15,9 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "base.h"
+#ifndef FLOG_MODULE_JSON_H_
+#define FLOG_MODULE_JSON_H_
 
-int flog_command_sync() {
-  flog_string_print("install dependencies from module.json\n");
-  return 0;
-}
+typedef struct Dependency {
+  const char* name;
+  const char* version;
+  struct Dependency* next;
+} Dependency;
+
+typedef struct ModuleJSON {
+  const char* name;
+  const char* description;
+  const char* version;
+  const char* url;
+  const char* license;
+  Dependency* dependencies;
+} ModuleJSON;
+
+ModuleJSON* flog_read_module_json(const char []);
+void flog_add_dependency(ModuleJSON*, const char [], const char []);
+void flog_write_module_json(const char [], ModuleJSON*);
+
+#endif

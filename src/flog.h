@@ -14,12 +14,43 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef FLOG_FLOG_H_
+#define FLOG_FLOG_H_
+
+#include <libgen.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <unistd.h>
 
 #include "../deps/quickjs/cutils.h"
 #include "../deps/quickjs/quickjs.h"
 #include "commands/base.h"
+#include "engine.h"
+#include "database.h"
+#include "module.h"
+
+JSContext* flog_context();
+Database* flog_database();
+
+#define MODULE_JSON "module.json"
+
+#define SET_STRING(object, property, value)\
+  do {\
+    JSContext* context = flog_context();\
+    JS_SetPropertyStr(context, object, property, JS_NewString(context, value));\
+  } while (0);
+
+void status(const char*, ...);
+
+#define RETURN_IF(predicate)\
+  if (predicate) {\
+    return;\
+  }\
 
 /*#define flog_export(mod, func)\
   void flog_export_##modname(JSContext* context) {\
     func(context);\
   }\*/
+
+#endif

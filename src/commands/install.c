@@ -15,22 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FLOG_APP_H_
-#define FLOG_APP_H_
-#include <stdarg.h>
-#include <stdlib.h>
+#include "base.h"
+#include "../flog.h"
+#include "../module-json.h"
 
-#include "engine.h"
-#include "module.h"
-#include "database.h"
+int flog_command_install(char const module[]) {
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  char* path = flog_string_glue(cwd, MODULE_JSON);
+  ModuleJSON* module_json = flog_read_module_json(path);
+  free(path);
+  free(module_json);
 
-typedef struct App {
-  Engine* engine;
-  Database* database;
-  Module* modules;
-} App;
-
-void flog_init_app();
-void flog_teardown_app();
-void flog_add_module(Module* mod);
-#endif
+  printf("installing %s:\n", module);
+  return 0;
+}

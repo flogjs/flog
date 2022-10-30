@@ -21,7 +21,10 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdbool.h>
 
+bool flog_file_exists(const char* file);
 char* flog_file_read(const char* path);
+void flog_write_file(const char [], const char []);
 int flog_file_new_directory(const char* path);
 #endif

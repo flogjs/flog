@@ -17,7 +17,7 @@
 
 #include "module.h"
 #include "resolve.h"
-#include "app.h"
+#include "flog.h"
 
 void show_error(JSContext* context) {
   JSValue exception = JS_GetException(context);
@@ -70,7 +70,22 @@ static JSModuleDef* create_module(JSContext* context,
   JS_FreeValue(context, value);
 
   return module_def;
+}
 
+JSModuleDef* flog_run_code(JSContext* context, char* code) {
+  if (code == NULL) {
+    flog_log("flog_run_code: no code passed");
+    return NULL;
+  }
+
+  DynBuf dynbuf;
+  dbuf_init(&dynbuf);
+
+  for (const char *i = code; *i != '\0'; i++) {
+    dbuf_putc(&dynbuf, *i);
+  }
+
+  return create_module(context, &dynbuf, "eval", true);
 }
 
 /* Load a module from a JavaScript (.js) file. */

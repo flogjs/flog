@@ -19,30 +19,28 @@
 
 static App* app = 0;
 
-void flog_new_app() {
+void flog_init_app() {
   if (app == 0) {
     app = calloc(1, sizeof(*app));
-    app->engine = flog_new_engine();
+    app->engine = flog_init_engine();
+    app->database = flog_init_database();
   };
 }
 
-void flog_dispose_app() {
+void flog_teardown_app() {
   if (app != 0) {
-    flog_dispose_engine(app->engine);
+    flog_teardown_engine(app->engine);
+    flog_teardown_database(app->database);
     free(app);
   }
 }
 
-Engine* flog_engine() {
-  return app->engine;
+JSContext* flog_context() {
+  return app->engine->context;
 }
 
 Database* flog_database() {
   return app->database;
-}
-
-Module* flog_modules() {
-  return app->modules;
 }
 
 void flog_add_module(Module* mod) {

@@ -29,7 +29,7 @@ typedef struct Engine {
   JSContext* context;
 } Engine;
 
-Engine* flog_new_engine();
-void flog_dispose_engine(Engine*);
+Engine* flog_init_engine();
+void flog_teardown_engine(Engine*);
 
 #endif

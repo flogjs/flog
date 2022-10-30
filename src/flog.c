@@ -16,7 +16,15 @@
  */
 
 #include "flog.h"
-#include <stdlib.h>
+
+void status(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  printf(":: ");
+  vprintf(format, args);
+  printf("...\n");
+  va_end(args);
+}
 
 int main(int argc, char** argv) {
   return argc == 1 ? flog_command_help() : flog_command_args(argc, argv);

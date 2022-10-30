@@ -18,9 +18,18 @@
 #ifndef FLOG_DATABASE_H_
 #define FLOG_DATABASE_H_
 
+#include <pwd.h>
+#include <unistd.h>
+#include <git2.h>
+#include <sys/stat.h>
+
 typedef struct Database {
   int (* has)(char* name);
   const char* (* get_path)(char* name);
+  char* home;
 } Database;
+
+Database* flog_init_database();
+void flog_teardown_database(Database*);
 
 #endif

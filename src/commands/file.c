@@ -17,10 +17,10 @@
 
 #include "base.h"
 #include "../module.h"
-#include "../app.h"
+#include "../flog.h"
 
 int flog_command_file(char* path, int argc, char* argv[]) {
-  flog_load_main_module(flog_engine()->context, argv[1]);
+  flog_load_main_module(flog_context(), argv[1]);
 
   return 0;
 }

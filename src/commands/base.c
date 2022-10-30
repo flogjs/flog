@@ -31,8 +31,8 @@ static int args2(int argc, char* argv[]) {
     return flog_command_file(operation, argc, argv);
   }
 
-  if (flog_string_equals(operation, "sync")) {
-    return flog_command_sync();
+  if (flog_string_equals(operation, "update")) {
+    return flog_command_update();
   }
 
   if (flog_string_equals(operation, "list")) {
@@ -51,8 +51,12 @@ static int args3(int argc, char* argv[]) {
   char* operation = argv[1];
   char* param = argv[2];
 
-  if (flog_string_equals(operation, "sync")) {
-    return flog_command_sync(param);
+  if (flog_string_equals(operation, "-e")) {
+    return flog_command_script(param);
+  }
+
+  if (flog_string_equals(operation, "install")) {
+    return flog_command_install(param);
   }
 
   if (flog_string_equals(operation, "info")) {
@@ -67,11 +71,11 @@ static int args3(int argc, char* argv[]) {
 }
 
 int flog_command_args(int argc, char* argv[]) {
-  flog_new_app();
+  flog_init_app();
 
   int result = argc == 2 ? args2(argc, argv) : args3(argc, argv);
 
-  flog_dispose_app();
+  flog_teardown_app();
 
   return result;
 }

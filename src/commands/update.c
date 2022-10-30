@@ -15,22 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FLOG_APP_H_
-#define FLOG_APP_H_
-#include <stdarg.h>
-#include <stdlib.h>
+#include "base.h"
 
-#include "engine.h"
-#include "module.h"
-#include "database.h"
-
-typedef struct App {
-  Engine* engine;
-  Database* database;
-  Module* modules;
-} App;
-
-void flog_init_app();
-void flog_teardown_app();
-void flog_add_module(Module* mod);
-#endif
+int flog_command_update() {
+  printf("updating");
+  return 0;
+}
