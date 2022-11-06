@@ -30,7 +30,7 @@ typedef struct App {
   Module* modules;
 } App;
 
-void flog_init_app();
-void flog_teardown_app();
+void flog_app_new();
+void flog_app_free();
 void flog_add_module(Module* mod);
 #endif

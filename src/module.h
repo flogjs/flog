@@ -17,22 +17,35 @@
 #ifndef FLOG_MODULE_H_
 #define FLOG_MODULE_H_
 
+#define MODULE_JSON "module.json"
+
 #include <dlfcn.h>
 #include "string.h"
 #include "file.h"
 #include "engine.h"
 
-struct Module {
+typedef struct Dependency {
+  const char* name;
+  const char* version;
+  struct Dependency* next;
+} Dependency;
+
+typedef struct Module {
+  const char* name;
+  const char* description;
+  const char* version;
+  const char* url;
+  const char* license;
+  Dependency* dependencies;
   struct Module* next;
-};
-typedef struct Module Module;
+} Module;
 
 typedef JSModuleDef* (*Export)(JSContext* context, const char* name);
 typedef JSModuleDef* (*Loader)(JSContext* context, const char* path, bool main);
 
-JSModuleDef* flog_load_module(JSContext* context,
-                              const char* name,
-                              void* opaque);
-JSModuleDef* flog_load_main_module(JSContext* context, const char* name);
+char* flog_module_resolve(JSContext*, char const*, char const*, void*);
+JSModuleDef* flog_module_load(JSContext*, const char*, void*);
+JSModuleDef* flog_module_load_main(JSContext*, const char*);
 JSModuleDef* flog_run_code(JSContext*, char*);
+void flog_module_install(Module*, const char*);
 #endif

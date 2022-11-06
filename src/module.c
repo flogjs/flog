@@ -16,7 +16,7 @@
  */
 
 #include "module.h"
-#include "resolve.h"
+#include "string.h"
 #include "flog.h"
 
 void show_error(JSContext* context) {
@@ -161,10 +161,11 @@ static JSModuleDef* load_so(JSContext* context, const char* path, bool main) {
  */
 static JSModuleDef* load_lib(JSContext* context, const char* path, bool main) {
   Database* database = flog_database();
-  if (!database->has((char*) path)) {
+  //if (!database->has((char*) path)) {
 //    char* copy = flog_string_copy(name);
-  }
-  return load_js(context, database->get_path((char*) path), false);
+  //}
+  return 0;
+  //return load_js(context, database->get_path((char*) path), false);
 }
 
 static Loader resolve(char const* path) {
@@ -181,14 +182,99 @@ static Loader resolve(char const* path) {
   return load_lib;
 }
 
-JSModuleDef* flog_load_module(JSContext* context,
+JSModuleDef* flog_module_load(JSContext* context,
                               const char* path,
                               void* opaque) {
   flog_log("flog_module_load: %s\n", path);
   return resolve(path)(context, path, false);
 }
 
-JSModuleDef* flog_load_main_module(JSContext* context, const char* path) {
+JSModuleDef* flog_module_load_main(JSContext* context, const char* path) {
   flog_log("flog_module_load: %s\n", path);
   return resolve(path)(context, path, true);
+}
+
+char* flog_module_resolve(JSContext* context,
+                          char const* from,
+                          char const* specifier,
+                          void* opaque) {
+  // absolute path
+  if (specifier[0] == '/') {
+    char* buffer = flog_string_copy(specifier);
+    char* resolved = realpath(buffer, NULL);
+    free(buffer);
+    return resolved;
+  }
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  flog_log("  [cwd] = %s\n", cwd);
+  flog_log("  [from] = %s\n", from);
+
+  char* from_directory = flog_dirname(from);
+  flog_log("  [from_directory] = %s\n", from_directory);
+  char* directory;
+  if (flog_string_length(from_directory) == 0) {
+    // from is not qualified, attach to cwd
+    directory = flog_string_glue(cwd, from_directory);
+    free(from_directory);
+  } else {
+    // from is already qualified
+    directory = from_directory;
+  }
+  flog_log("  [directory] = %s\n", directory);
+  flog_log("  [specifier] = %s\n", specifier);
+  char* unresolved = flog_string_glue(directory, specifier);
+  free(directory);
+  char* resolved = realpath(unresolved, NULL);
+  free(unresolved);
+  flog_log("  return = %s\n\n", resolved);
+  return resolved;
+}
+
+static void init_modules_directory() {
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  char* modules = flog_string_glue(cwd, "modules");
+  CLEAN_IF(flog_file_exists(modules));
+
+  info("Creating modules directory");
+  mkdir(modules, 0744);
+
+  clean:
+    free(modules);
+}
+
+static void init_namespace_directory(const char module[]) {
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  char* modules = flog_string_glue(cwd, "modules");
+  int index = flog_string_index_of(module, '/');
+  char* namespace = flog_string_slice(module, 0, index);
+  char* namespace_directory = flog_string_glue(modules, namespace);
+  CLEAN_IF(flog_file_exists(namespace_directory));
+
+  mkdir(namespace_directory, 0744);
+
+  clean:
+    free(namespace);
+    free(namespace_directory);
+}
+
+void flog_module_install(Module* module, const char* name) {
+  Database* database = flog_database();
+
+  info("Querying database");
+  if (!flog_database_has(database, name)) {
+    error(" target not found", name);
+  } else {
+    init_modules_directory();
+    info("Installing modules");
+    init_namespace_directory(name);
+    more(" %s ", name);
+    fflush(NULL);
+    // actually install module 
+    // 1 clone repo if necessary / make sure it's up-to-date
+    // 2 create a local checkout in modules
+    more("%s✓%s\n", COLOR_GREEN, OFF);
+  }
 }

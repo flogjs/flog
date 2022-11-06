@@ -17,6 +17,12 @@
 #ifndef FLOG_FLOG_H_
 #define FLOG_FLOG_H_
 
+#define COLOR_BOLD "\e[1m"
+#define COLOR_RED  "\e[1;31m"
+#define COLOR_GREEN "\e[1;32m"
+#define COLOR_BLUE "\e[1;34m"
+#define OFF  "\e[m"
+
 #include <libgen.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -33,20 +39,25 @@
 JSContext* flog_context();
 Database* flog_database();
 
-#define MODULE_JSON "module.json"
-
 #define SET_STRING(object, property, value)\
   do {\
     JSContext* context = flog_context();\
     JS_SetPropertyStr(context, object, property, JS_NewString(context, value));\
   } while (0);
 
-void status(const char*, ...);
+void info(const char*, ...);
+void more(const char*, ...);
+void error(const char*, ...);
 
 #define RETURN_IF(predicate)\
   if (predicate) {\
     return;\
   }\
+
+#define CLEAN_IF(predicate)\
+  if (predicate) {\
+    goto clean;\
+  }
 
 /*#define flog_export(mod, func)\
   void flog_export_##modname(JSContext* context) {\

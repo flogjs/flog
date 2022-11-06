@@ -15,40 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "app.h"
+#include "base.h"
+#include "../flog.h"
+#include "../database.h"
 
-static App* app = 0;
-
-void flog_app_new() {
-  if (app == 0) {
-    app = calloc(1, sizeof(* app));
-    app->engine = flog_engine_new();
-    app->database = flog_database_new();
-  };
-}
-
-void flog_app_free() {
-  if (app != 0) {
-    flog_engine_free(app->engine);
-    flog_database_free(app->database);
-    free(app);
-  }
-}
-
-JSContext* flog_context() {
-  return app->engine->context;
-}
-
-Database* flog_database() {
-  return app->database;
-}
-
-void flog_add_module(Module* mod) {
-  if (app->modules == 0) { // no modules yet
-    mod->next = mod;
-    app->modules = mod;
-  } else { // cycle though
-    mod->next = app->modules;
-    app->modules = mod;
-  }
+int flog_command_sync() {
+  Database* database = flog_database();
+  flog_database_sync(database);
+  return 0;
 }

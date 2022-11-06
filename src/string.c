@@ -17,6 +17,11 @@
 
 #include "string.h"
 
+char* flog_dirname(const char* path) {
+  int last = flog_string_last(path, '/');
+  return flog_string_slice(path, 0, last == -1 ? 0 : last + 1);
+}
+
 static size_t get_length(char const string[]) {
   size_t length = 0;
   while (string[length] != 0) {
@@ -24,7 +29,19 @@ static size_t get_length(char const string[]) {
   }
   return length;
 }
-size_t (*flog_string_length)(char const string[]) = get_length;
+size_t (* flog_string_length)(char const string[]) = get_length;
+
+int flog_string_index_of(char const string[], const char c) {
+  int i = 0;
+  char s = 0;
+  while ((s = string[i]) != 0) {
+    if (s == c) {
+      return i;
+    }
+    i++;
+  }
+  return -1;
+}
 
 bool flog_string_endswith(char const search[], char const ending[]) {
   size_t search_length = get_length(search);

@@ -23,26 +23,26 @@
 #include "../deps/quickjs/quickjs.h"
 
 static void set_property(JSContext* context,
-                         ModuleJSON* module_json,
+                         Module* module,
                          JSValueConst json,
                          const char* name) {
   JSValue property = JS_GetPropertyStr(context, json, name);
   if (!JS_IsUndefined(property)) {
     const char* string = JS_ToCString(context, property);
     if (flog_string_equals(name, "name")) {
-      module_json->name = string;
+      module->name = string;
     }
     if (flog_string_equals(name, "description")) {
-      module_json->description = string;
+      module->description = string;
     }
     if (flog_string_equals(name, "version")) {
-      module_json->version = string;
+      module->version = string;
     }
     if (flog_string_equals(name, "url")) {
-      module_json->url = string;
+      module->url = string;
     }
     if (flog_string_equals(name, "license")) {
-      module_json->license = string;
+      module->license = string;
     }
     JS_FreeCString(context, string);
   }
@@ -52,18 +52,19 @@ static void set_property(JSContext* context,
 // creates a `module.json` in this directory if doesn't exist
 static void init_module_json(const char path[]) {
   RETURN_IF(flog_file_exists(path));
-  status("No %s found, initializing", MODULE_JSON);
-  ModuleJSON* module_json = calloc(1, sizeof(* module_json));
+
+  info("Initializing %s", MODULE_JSON);
+  Module* module = calloc(1, sizeof(* module));
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
-  module_json->name = basename(cwd);
-  flog_write_module_json(path, module_json);
-  free(module_json);
+  module->name = basename(cwd);
+  flog_module_json_write(path, module);
+  free(module);
 }
 
-static void show_deps(ModuleJSON* module_json) {
-  if (module_json != NULL && module_json->dependencies != NULL)  {
-    Dependency* dep = module_json->dependencies;
+static void show_deps(Module* module) {
+  if (module != NULL && module->dependencies != NULL)  {
+    Dependency* dep = module->dependencies;
     while (dep != NULL) {
       printf("dependency: %s\n", dep->name);
       dep = dep->next;
@@ -71,24 +72,21 @@ static void show_deps(ModuleJSON* module_json) {
   }
 }
 
-
-
-
-ModuleJSON* flog_read_module_json(const char path[]) {
+Module* flog_module_json_read(const char path[]) {
   JSContext* context = flog_context();
   init_module_json(path);
-  ModuleJSON* module_json = calloc(1, sizeof(* module_json));
+  Module* module = calloc(1, sizeof(* module));
   char* code = flog_file_read(path);
   size_t code_length = flog_string_length(code);
 
   if (code != NULL) {
     JSValue json = JS_ParseJSON(context, code, code_length, MODULE_JSON);
     if (JS_IsObject(json)) {
-      set_property(context, module_json, json, "name");
-      set_property(context, module_json, json, "description");
-      set_property(context, module_json, json, "version");
-      set_property(context, module_json, json, "url");
-      set_property(context, module_json, json, "license");
+      set_property(context, module, json, "name");
+      set_property(context, module, json, "description");
+      set_property(context, module, json, "version");
+      set_property(context, module, json, "url");
+      set_property(context, module, json, "license");
 
       JSAtom deps_atom = JS_NewAtom(context, "dependencies");
       JSValue dependencies = JS_GetProperty(context, json, deps_atom);
@@ -100,11 +98,11 @@ ModuleJSON* flog_read_module_json(const char path[]) {
 
         JS_GetOwnPropertyNames(context, &tab, &length, dependencies,
                                  JS_GPN_STRING_MASK | JS_GPN_ENUM_ONLY);
-        for(size_t i = 0; i < length; i++) {
+        for (size_t i = 0; i < length; i++) {
           property = JS_AtomToCString(context, tab[i].atom);
           js_value = JS_GetProperty(context, dependencies, tab[i].atom);
           value = JS_ToCString(context, js_value);
-          flog_add_dependency(module_json, property, value);
+          flog_add_dependency(module, property, value);
           JS_FreeCString(context, value);
           JS_FreeValue(context, js_value);
           JS_FreeCString(context, property);
@@ -117,12 +115,12 @@ ModuleJSON* flog_read_module_json(const char path[]) {
 
     }
     JS_FreeValue(context, json);
-    printf("name: %s\n", module_json->name);
-    printf("license: %s\n", module_json->license);
+    //printf("name: %s\n", module->name);
+    //printf("license: %s\n", module->license);
   }
-  show_deps(module_json);
+  show_deps(module);
   free(code);
-  return module_json;
+  return module;
 }
 
 static bool dependency_missing(Dependency* deps, const char name[]) {
@@ -138,27 +136,27 @@ static bool dependency_missing(Dependency* deps, const char name[]) {
   return found;
 }
 
-void flog_add_dependency(ModuleJSON* module_json,
+void flog_add_dependency(Module* module,
                          const char name[],
                          const char version[]) {
-  if (!dependency_missing(module_json->dependencies, name)) {
-    Dependency* dependency = module_json->dependencies;
+  if (!dependency_missing(module->dependencies, name)) {
+    Dependency* dependency = module->dependencies;
     Dependency* new_dependency = calloc(1, sizeof(* new_dependency));
     new_dependency->name = name;
     new_dependency->version = version;
     if (dependency == NULL) {
-      module_json->dependencies = new_dependency;
+      module->dependencies = new_dependency;
     } else {
       dependency->next = new_dependency;
     }
   }
 }
 
-void flog_write_module_json(const char path[], ModuleJSON* module_json) {
+void flog_module_json_write(const char path[], Module* module) {
   JSContext* context = flog_context();
 
   JSValue json = JS_NewObject(context);
-  SET_STRING(json, "name", module_json->name);
+  SET_STRING(json, "name", module->name);
   JSValue space = JS_NewInt32(context, 2);
   JSValue jsonstr = JS_JSONStringify(context, json, JS_UNDEFINED, space);
 

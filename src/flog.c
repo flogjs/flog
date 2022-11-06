@@ -17,12 +17,28 @@
 
 #include "flog.h"
 
-void status(const char* format, ...) {
+void info(const char* format, ...) {
   va_list args;
   va_start(args, format);
-  printf(":: ");
+  printf(COLOR_BLUE ":: " OFF COLOR_BOLD);
   vprintf(format, args);
-  printf("...\n");
+  printf(OFF "\n");
+  va_end(args);
+}
+
+void more(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  vprintf(format, args);
+  va_end(args);
+}
+
+void error(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  printf(COLOR_RED " error" OFF);
+  vprintf(format, args);
+  printf(OFF "\n");
   va_end(args);
 }
 

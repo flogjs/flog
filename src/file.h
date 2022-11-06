@@ -27,4 +27,6 @@ bool flog_file_exists(const char* file);
 char* flog_file_read(const char* path);
 void flog_write_file(const char [], const char []);
 int flog_file_new_directory(const char* path);
+size_t flog_file_n_lines(const char*);
+bool flog_file_match_module_line(const char*, const char*);
 #endif

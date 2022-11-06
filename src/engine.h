@@ -22,14 +22,13 @@
 #include <linux/limits.h>
 #include "../deps/quickjs/cutils.h"
 #include "../deps/quickjs/quickjs.h"
-#include "resolve.h"
 
 typedef struct Engine {
   JSRuntime* runtime;
   JSContext* context;
 } Engine;
 
-Engine* flog_init_engine();
-void flog_teardown_engine(Engine*);
+Engine* flog_engine_new();
+void flog_engine_free(Engine*);
 
 #endif

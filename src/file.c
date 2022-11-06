@@ -39,6 +39,49 @@ char* flog_file_read(const char* path) {
   return buffer;
 }
 
+size_t flog_file_n_lines(const char* path) {
+  FILE* file = fopen(path, "r");
+  size_t lines = 0;
+  if (file == NULL) {
+    return lines;
+  }
+  while (!feof(file)) {
+    if (fgetc(file) == '\n') {
+      lines++;
+    }
+  }
+  fclose(file);
+  return lines; 
+}
+
+bool flog_file_match_module_line(const char* path, const char module[]) {
+  FILE* file = fopen(path, "r");
+  int position = 0;
+  int line_length = 80;
+  char line[line_length];
+
+  while (fgets(line, line_length, file)) {
+    while (module[position] != 0)  {
+      if (line[position] != module[position]) {
+        position = 0;
+        // violation, move to next line
+        break;
+      }
+
+      // partial match, next character in line must be : for a full match
+      if (line[position+1] == ':' && module[position+1] == 0) {
+        fclose(file);
+        return true;
+      }
+
+      position++;
+    }
+  }
+
+  fclose(file);
+  return false;
+}
+
 void flog_write_file(const char path[], const char data[]) {
   FILE* file = fopen(path, "w");
   if (file == NULL) {

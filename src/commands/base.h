@@ -25,6 +25,7 @@ int flog_command_help();
 int flog_command_file(char* file, int argc, char* argv[]);
 int flog_command_update();
 int flog_command_list();
+int flog_command_sync();
 
 int flog_command_args(int argc, char* argv[]);
 int flog_command_script(char path[]);

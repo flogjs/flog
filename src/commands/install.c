@@ -16,17 +16,17 @@
  */
 
 #include "base.h"
-#include "../flog.h"
+#include "../string.h"
+#include "../module.h"
 #include "../module-json.h"
 
-int flog_command_install(char const module[]) {
+int flog_command_install(char const module_name[]) {
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
   char* path = flog_string_glue(cwd, MODULE_JSON);
-  ModuleJSON* module_json = flog_read_module_json(path);
+  Module* module = flog_module_json_read(path);
+  flog_module_install(module, module_name);
   free(path);
-  free(module_json);
-
-  printf("installing %s:\n", module);
+  free(module);
   return 0;
 }

@@ -27,14 +27,14 @@ static JSValue print(JSContext* context,
   return JS_UNDEFINED;
 }
 
-Engine* flog_init_engine() {
+Engine* flog_engine_new() {
   Engine* engine = calloc(1, sizeof(* engine));
   engine->runtime = JS_NewRuntime();
   engine->context = JS_NewContext(engine->runtime);
 
   /* module load function */
-  JS_SetModuleLoaderFunc(engine->runtime, flog_resolve_module,
-    flog_load_module, engine);
+  JS_SetModuleLoaderFunc(engine->runtime, flog_module_resolve,
+    flog_module_load, engine);
   JSValue global_obj = JS_GetGlobalObject(engine->context);
   JSAtom ns_atom = JS_NewAtom(engine->context, "log");
   JSValue obj = JS_NewCFunction(engine->context, print, "log", 0);
@@ -50,7 +50,7 @@ Engine* flog_init_engine() {
   return engine;
 }
 
-void flog_teardown_engine(Engine* engine) {
+void flog_engine_free(Engine* engine) {
   JS_FreeContext(engine->context);
   JS_FreeRuntime(engine->runtime);
   free(engine);

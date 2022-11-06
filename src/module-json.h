@@ -18,23 +18,10 @@
 #ifndef FLOG_MODULE_JSON_H_
 #define FLOG_MODULE_JSON_H_
 
-typedef struct Dependency {
-  const char* name;
-  const char* version;
-  struct Dependency* next;
-} Dependency;
+#include "module.h"
 
-typedef struct ModuleJSON {
-  const char* name;
-  const char* description;
-  const char* version;
-  const char* url;
-  const char* license;
-  Dependency* dependencies;
-} ModuleJSON;
-
-ModuleJSON* flog_read_module_json(const char []);
-void flog_add_dependency(ModuleJSON*, const char [], const char []);
-void flog_write_module_json(const char [], ModuleJSON*);
+void flog_add_dependency(Module*, const char [], const char []);
+Module* flog_module_json_read(const char []);
+void flog_module_json_write(const char [], Module*);
 
 #endif

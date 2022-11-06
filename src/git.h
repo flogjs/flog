@@ -15,15 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FLOG_RESOLVE_H_
-#define FLOG_RESOLVE_H_
+#ifndef FLOG_GIT_H_
+#define FLOG_GIT_H_
 
-#include <unistd.h>
-#include <limits.h>
+#include <git2.h>
+#include "flog.h"
 
-#include "string.h"
-#include "engine.h"
+void flog_git_init();
+void flog_git_free();
+void flog_git_clone(const char*, const char*);
+bool flog_git_pull_master(Database*);
+void flog_git_open(Database*, const char*);
+void flog_git_close(Database*);
 
-char* flog_dirname(const char*);
-char* flog_resolve_module(JSContext*, char const*, char const*, void*);
 #endif

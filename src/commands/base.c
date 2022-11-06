@@ -39,6 +39,10 @@ static int args2(int argc, char* argv[]) {
     return flog_command_list();
   }
 
+  if (flog_string_equals(operation, "sync")) {
+    return flog_command_sync();
+  }
+
   return 0;
 }
 
@@ -71,11 +75,11 @@ static int args3(int argc, char* argv[]) {
 }
 
 int flog_command_args(int argc, char* argv[]) {
-  flog_init_app();
+  flog_app_new();
 
   int result = argc == 2 ? args2(argc, argv) : args3(argc, argv);
 
-  flog_teardown_app();
+  flog_app_free();
 
   return result;
 }

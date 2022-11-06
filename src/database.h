@@ -18,18 +18,32 @@
 #ifndef FLOG_DATABASE_H_
 #define FLOG_DATABASE_H_
 
+#define DB_FILE = "master.db";
+
 #include <pwd.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include <git2.h>
 #include <sys/stat.h>
+#include "module.h"
+
+typedef struct Entry {
+  char* name;
+  char* version;
+  struct Entry* next;
+} Entry;
 
 typedef struct Database {
-  int (* has)(char* name);
-  const char* (* get_path)(char* name);
   char* home;
+  char* master_db;
+  git_repository* repo;
+  git_remote* remote;
+  Entry* entries;
 } Database;
 
-Database* flog_init_database();
-void flog_teardown_database(Database*);
+Database* flog_database_new();
+void flog_database_free(Database*);
+void flog_database_sync(Database*);
+bool flog_database_has(Database*, const char*);
 
 #endif
