@@ -66,7 +66,7 @@ static int module_init(JSContext* context, JSModuleDef* module_def) {
   return JS_SetModuleExport(context, module_def, "default", console);
 }
 
-JSModuleDef* flog_init_module(JSContext* context, const char* name) {
+JSModuleDef* flog_module_init(JSContext* context, const char* name) {
   JSModuleDef* module_def = JS_NewCModule(context, name, module_init);
   if (!module_def) {
     return NULL;

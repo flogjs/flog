@@ -140,7 +140,7 @@ static JSModuleDef* load_so(JSContext* context, const char* path, bool main) {
     goto fail;
   }
 
-  Export export = dlsym(lib, "flog_init_module");
+  Export export = dlsym(lib, "flog_module_init");
   if (!export) {
     fail:
       if (lib) {
