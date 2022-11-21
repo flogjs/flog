@@ -1,5 +1,5 @@
 MAIN=flog
-CFLAGS=-Wall -O3 -o $(MAIN) -rdynamic -lgit2
+FLAGS=-Wall -O3 -o $(MAIN) -rdynamic -lgit2 -Ideps/quickjs
 SRCS=$(wildcard src/*.c src/**/*.c)
 
 QJS_DIR=deps/quickjs
@@ -25,11 +25,11 @@ $(QJS_A): $(QJS_OS)
 	ranlib $@
 
 $(MAIN): $(QJS_A)
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
+	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(FLAGS) -lm -ldl
 	rm -f $(QJS_OBJS)
 
 main:
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(CFLAGS) -lm -ldl
+	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(FLAGS) -lm -ldl
 
 clean:
 	rm f $(MAIN)

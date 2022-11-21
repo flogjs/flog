@@ -12,6 +12,19 @@ minimal core.
 * Hot code replacement in development mode
 * Sandboxing of applications (directory-level scoping)
 
+### Prerequisites
+
+Your system needs to provide libgit2 as a library. Most Linux distributions
+package it.
+
+#### Arch Linux
+
+`pacman -S libgit2`
+
+#### Debian/Ubuntu
+
+`apt-get install libgit2-dev`
+
 ### Getting started
 
 On Linux, run `make` to compile. This will result in a `flog` executable in the
