@@ -1,5 +1,5 @@
 MAIN=flog
-FLAGS=-Wall -O3 -o $(MAIN) -rdynamic -lgit2 -Ideps/quickjs
+FLAGS=-Wall -O3 -o $(MAIN) -rdynamic -lgit2 -Ideps
 SRCS=$(wildcard src/*.c src/**/*.c)
 
 QJS_DIR=deps/quickjs
