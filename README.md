@@ -28,7 +28,7 @@ package it.
 ### Getting started
 
 On Linux, run `make` to compile. This will result in a `flog` executable in the
-same directory. 
+same directory.
 
 Create an `app.js` file in the same directory.
 
@@ -96,8 +96,8 @@ created when having compiled `flog`.
 
 ```Makefile
 console:
-	gcc -c -L../flog -llibqjs -o console.o console.c
-	gcc -o console.so -shared -Wl,-soname=console.so -Wl,--start-group console.o -Wl,--end-group
+  gcc -c -L../flog -llibqjs -o console.o console.c
+  gcc -o console.so -shared -Wl,-soname=console.so -Wl,--start-group console.o -Wl,--end-group
 ```
 
 Then in your .js file, import and use.
