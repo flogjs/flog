@@ -47,5 +47,5 @@ char* flog_module_resolve(JSContext*, char const*, char const*, void*);
 JSModuleDef* flog_module_load(JSContext*, const char*, void*);
 JSModuleDef* flog_module_load_main(JSContext*, const char*);
 JSModuleDef* flog_run_code(JSContext*, char*);
-void flog_module_install(Module*, const char*);
+void flog_module_install(const char*);
 #endif

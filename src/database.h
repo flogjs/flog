@@ -44,6 +44,8 @@ typedef struct Database {
 Database* flog_database_new();
 void flog_database_free(Database*);
 void flog_database_sync(Database*);
+void flog_database_clone_module(Database*, const char*);
+void flog_database_checkout_module(Database*, const char*, const char*);
 bool flog_database_has(Database*, const char*);
 
 #endif

@@ -16,6 +16,7 @@
  */
 
 #include "module.h"
+#include "module-json.h"
 #include "string.h"
 #include "flog.h"
 
@@ -152,18 +153,47 @@ static JSModuleDef* load_so(JSContext* context, const char* path, bool main) {
   return export(context, path);
 }
 
+static bool has_local_module(char const* target) {
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  char modules[PATH_MAX+9];
+  sprintf(modules, "%s/modules/%s", cwd, target);
+
+  return flog_file_exists(modules);
+}
 /*
  * Load a module from the library. If the module exists in the library, it will
  * resolve to an actual file under modules/<module>/<version>/main.js
  
  * If the module hasn't been synced yet to the local project, flog will sync
- * the current version in the database to the modules directory.
+ * the current version in the database to the modules directory. It will do so
+ * automatically for modules in the `std` namespace, but will ask for other
+ * modules.
  */
-static JSModuleDef* load_lib(JSContext* context, const char* path, bool main) {
+static JSModuleDef* load_lib(JSContext* context, const char* target, bool _) {
   Database* database = flog_database();
-  //if (!database->has((char*) path)) {
-//    char* copy = flog_string_copy(name);
-  //}
+  if (!flog_database_has(database, target)) {
+    error(" module `%s` not found", target);
+    return NULL;
+  }
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  char entry[PATH_MAX+17];
+  sprintf(entry, "%s/modules/%s/main.js", cwd, target);
+
+  if (has_local_module(target)) {
+    // load its main file
+    return load_js(context, entry, false);
+  } else {
+    // if std, install automatically
+    if (target[0] == 's' && target[1] == 't' && target[2] == 'd'
+        && target[3] == '/') {
+      flog_module_install(target);
+    
+      return load_js(context, entry, false);
+    }
+    // ask if would like to install
+  }
   return 0;
   //return load_js(context, database->get_path((char*) path), false);
 }
@@ -185,12 +215,10 @@ static Loader resolve(char const* path) {
 JSModuleDef* flog_module_load(JSContext* context,
                               const char* path,
                               void* opaque) {
-  flog_log("flog_module_load: %s\n", path);
   return resolve(path)(context, path, false);
 }
 
 JSModuleDef* flog_module_load_main(JSContext* context, const char* path) {
-  flog_log("flog_module_load: %s\n", path);
   return resolve(path)(context, path, true);
 }
 
@@ -204,6 +232,11 @@ char* flog_module_resolve(JSContext* context,
     char* resolved = realpath(buffer, NULL);
     free(buffer);
     return resolved;
+  }
+  // library module
+  if (flog_string_index_of(specifier, '.') == -1) {
+    char* buffer = flog_string_copy(specifier);
+    return buffer;
   }
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
@@ -231,50 +264,69 @@ char* flog_module_resolve(JSContext* context,
   return resolved;
 }
 
-static void init_modules_directory() {
-  char cwd[PATH_MAX];
-  getcwd(cwd, sizeof(cwd));
-  char* modules = flog_string_glue(cwd, "modules");
-  CLEAN_IF(flog_file_exists(modules));
-
+static void init_modules_directory(const char path[]) {
+  RETURN_IF(flog_file_exists(path));
+  mkdir(path, 0744);
   info("Creating modules directory");
-  mkdir(modules, 0744);
-
-  clean:
-    free(modules);
 }
 
-static void init_namespace_directory(const char module[]) {
+static void init_directory(const char directory[]) {
+  RETURN_IF(flog_file_exists(directory));
+  mkdir(directory, 0744);
+}
+
+static void init_directories(const char module[]) {
   char cwd[PATH_MAX];
   getcwd(cwd, sizeof(cwd));
   char* modules = flog_string_glue(cwd, "modules");
+
+  // ensure `modules` exists
+  init_modules_directory(modules);
+
+  // ensure `modules/${namespace}` exists
   int index = flog_string_index_of(module, '/');
   char* namespace = flog_string_slice(module, 0, index);
   char* namespace_directory = flog_string_glue(modules, namespace);
-  CLEAN_IF(flog_file_exists(namespace_directory));
+  init_directory(namespace_directory);
+  free(namespace_directory);
+  free(namespace);
 
-  mkdir(namespace_directory, 0744);
+  // ensure `modules/${namespace}/${module}` exists
+  //char* module_directory = flog_string_glue(modules, module);
+  //init_directory(module_directory);
+  //free(module_directory);
 
-  clean:
-    free(namespace);
-    free(namespace_directory);
+  free(modules);
 }
 
-void flog_module_install(Module* module, const char* name) {
+void flog_module_install(const char* target) {
+  // make sure module.json exists
+  char cwd[PATH_MAX];
+  getcwd(cwd, sizeof(cwd));
+  char* path = flog_string_glue(cwd, MODULE_JSON);
+  Module* module = flog_module_json_read(path);
+  free(path);
+  free(module);
+
   Database* database = flog_database();
 
   info("Querying database");
-  if (!flog_database_has(database, name)) {
-    error(" target not found", name);
+  if (!flog_database_has(database, target)) {
+    error(" target `%s` not found", target);
   } else {
-    init_modules_directory();
-    info("Installing modules");
-    init_namespace_directory(name);
-    more(" %s ", name);
+    init_directories(target);
+    more(" %s ", target);
     fflush(NULL);
     // actually install module 
     // 1 clone repo if necessary / make sure it's up-to-date
+    flog_database_clone_module(database, target);
     // 2 create a local checkout in modules
+    char cwd[PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
+    char module_directory[PATH_MAX+9];
+    sprintf(module_directory, "%s/modules/%s", cwd, target);
+
+    flog_database_checkout_module(database, target, module_directory);
     more("%s✓%s\n", COLOR_GREEN, OFF);
   }
 }

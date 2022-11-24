@@ -24,6 +24,7 @@
 void flog_git_init();
 void flog_git_free();
 void flog_git_clone(const char*, const char*);
+void flog_git_clone_bare(const char*, const char*);
 bool flog_git_pull_master(Database*);
 void flog_git_open(Database*, const char*);
 void flog_git_close(Database*);

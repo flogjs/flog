@@ -23,6 +23,8 @@
 #define COLOR_BLUE "\e[1;34m"
 #define OFF  "\e[m"
 
+#define MODULES "modules"
+
 #include <libgen.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -54,9 +56,9 @@ void error(const char*, ...);
     return;\
   }\
 
-#define CLEAN_IF(predicate)\
+#define NEXT_IF(predicate)\
   if (predicate) {\
-    goto clean;\
+    goto next;\
   }
 
 /*#define flog_export(mod, func)\

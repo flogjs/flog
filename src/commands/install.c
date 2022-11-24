@@ -21,12 +21,6 @@
 #include "../module-json.h"
 
 int flog_command_install(char const module_name[]) {
-  char cwd[PATH_MAX];
-  getcwd(cwd, sizeof(cwd));
-  char* path = flog_string_glue(cwd, MODULE_JSON);
-  Module* module = flog_module_json_read(path);
-  flog_module_install(module, module_name);
-  free(path);
-  free(module);
+  flog_module_install(module_name);
   return 0;
 }

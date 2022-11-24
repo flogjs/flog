@@ -33,7 +33,9 @@ same directory.
 Create an `app.js` file in the same directory.
 
 ```js
-log("Hello, world!");
+import console from "std/console";
+
+console.log("Hello, world!");
 ```
 
 You can now run flog with this file as the first argument.
@@ -42,9 +44,20 @@ You can now run flog with this file as the first argument.
 ./flog app.js
 ```
 
-Besides the standard JavaScript language features introduced by QuickJS, flog
-currently has a utility function `log` in the global namespace that emulates
-`console.log`. This will be later removed in official releases.
+Flog will download and install the standard module `console` and will execute
+the file.
+
+Standard modules are automatically installed the first time they are used in a
+file. In the case of non-standard (third-party) modules encountered in a file,
+you will be prompted if you wish to download and install them.
+
+If you wish to explicitly install modules before you (both standard and
+third-party), use `flog install [module]`.
+
+```sh
+./flog install std/console
+
+```
 
 In addition to normal JavaScript syntax, you can use `import` and `export`
 declarations to import and export code via modules. Currently supported are

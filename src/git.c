@@ -27,7 +27,7 @@ typedef struct Options {
   git_annotated_commit** annotated;
   size_t annotated_count;
 
-  int no_commit : 1;
+  int no_commit: 1;
 } Options;
 
 static int fastforward(git_repository* repo, const git_oid* target_oid) {
@@ -120,6 +120,18 @@ void flog_git_clone(const char* repository, const char* directory) {
   if (ret != 0) {
     error("Couldn't initialise database");
   }
+  git_repository_free(repo);
+}
+
+void flog_git_clone_bare(const char* repository, const char* directory) {
+  git_repository* repo = NULL;
+  git_clone_options options = GIT_CLONE_OPTIONS_INIT;
+  options.bare = 1;
+  int ret = git_clone(&repo, repository, directory, &options);
+  if (ret != 0) {
+    error("Couldn't initialise database");
+  }
+
   git_repository_free(repo);
 }
 
