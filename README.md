@@ -65,7 +65,7 @@ declarations to import and export code via modules. Currently supported are
 
 ### Creating a C module
 
-Define a `flog_init_module` function with the given signature. This is an
+Define a `flog_module_init` function with the given signature. This is an
 example for a module that emulates `console.log`.
 
 ```c
