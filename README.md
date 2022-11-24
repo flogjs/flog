@@ -6,7 +6,7 @@ minimal core.
 ## Design goals
 
 * Minimal core as a thin wrapper around QuickJS ✓
-* Executeable and module manager in one
+* Executable and module manager in one WIP
 * Namespaced, officially supported standard library (`std`)
 * Third-party, scoped module area
 * Hot code replacement in development mode
