@@ -189,6 +189,8 @@ static JSModuleDef* load_lib(JSContext* context, const char* target, bool _) {
     if (target[0] == 's' && target[1] == 't' && target[2] == 'd'
         && target[3] == '/') {
       flog_module_install(target);
+
+      printf("\n");
     
       return load_js(context, entry, false);
     }
