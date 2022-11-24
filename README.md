@@ -51,8 +51,8 @@ Standard modules are automatically installed the first time they are used in a
 file. In the case of non-standard (third-party) modules encountered in a file,
 you will be prompted if you wish to download and install them.
 
-If you wish to explicitly install modules before you (both standard and
-third-party), use `flog install [module]`.
+If you wish to explicitly install modules before use (both standard and
+third-party), run `flog install [module]`.
 
 ```sh
 ./flog install std/console
