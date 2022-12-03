@@ -1,6 +1,6 @@
 # Flog
 
-Flog is a **JavaScript** runtime. Written on top of the QuickJS in C, it has a
+Flog is a **JavaScript** runtime. Written on top of QuickJS in C, it has a
 minimal core.
 
 ## Design goals
