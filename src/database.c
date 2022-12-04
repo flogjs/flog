@@ -106,13 +106,25 @@ void flog_database_clone_module(Database* database, const char* module) {
 
   char path[1000];
   sprintf(path, "%s/modules/%s", database->home, module);
-
   if (!flog_file_exists(path)) {
-    char base[] = "https://github.com/flogjs";
-    char url[100];
-    sprintf(url, "%s/%s-%s-sync", base, "std", "console");
-    // init clone the repo
-    flog_git_clone_bare(url, path);
+    // prepublished modules until we have our server and `flog publish`
+    char* prepubs[] = {"std/console", "std/dyndef"};
+    for (size_t i = 0; i < sizeof(prepubs) / sizeof(prepubs[0]); i++) {
+      if (flog_string_equals(module, prepubs[i])) {
+        char base[] = "https://github.com/flogjs";
+        char url[100];
+        int index = flog_string_index_of(module, '/');
+        char* namespace = flog_string_slice(module, 0, index);
+        int length = flog_string_length(module);
+        char* name = flog_string_slice(module, index + 1, length);
+        sprintf(url, "%s/%s-%s-sync", base, namespace, name);
+        free(namespace);
+        free(name);
+        // init clone the repo
+        flog_git_clone_bare(url, path);
+      }
+    }
+
   }
 }
 
