@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ret=0
 passed=0
