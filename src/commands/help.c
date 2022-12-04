@@ -26,11 +26,13 @@ void line(char const* operation, char const* explanation) {
 int flog_command_help() {
   flog_string_print("flog %s\n", FLOG_VERSION);
   flog_string_print("quickjs %s\n\n", QJS_VERSION);
-  flog_string_print("usage:  flog <file>.js\n");
-  flog_string_print("        flog <operation> [...]\n\n");
+  flog_string_print(
+      "usage:  flog <file>.js              parse and execute <file>.js\n");
+  flog_string_print("        flog <operation> [...]      execute operation\n");
+  flog_string_print("        flog help                   show this help\n\n");
   flog_string_print("local operations (current directory):\n");
   line("sync <module>", "add/update <module> as dependency into module.json");
-  line("list", "show synced modules"),
+  line("list", "show synced modules");
   flog_string_print("\nglobal operations:\n");
   line("info <module>", "show info about <module>");
   line("with <module> [...]", "execute <module> with ... as params");
