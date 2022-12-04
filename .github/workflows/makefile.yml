@@ -21,3 +21,9 @@ jobs:
 
     - name: Compile
       run: make
+
+    - name: Test
+      run: |
+        chmod +x ./run-tests.sh
+        ./run-tests.sh
+      shell: bash
