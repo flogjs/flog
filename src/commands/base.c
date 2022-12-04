@@ -42,6 +42,12 @@ static int args2(int argc, char* argv[]) {
   if (flog_string_equals(operation, "sync")) {
     return flog_command_sync();
   }
+    
+  if (flog_string_equals(operation, "help") ||
+      flog_string_equals(operation, "-h") ||
+      flog_string_equals(operation, "--help")) {
+    return flog_command_help();
+  }
 
   return 0;
 }
