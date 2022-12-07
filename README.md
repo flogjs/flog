@@ -123,4 +123,4 @@ console.log("Hi!");
 
 ### License
 
-AGPL3.0
+MIT
