@@ -121,6 +121,10 @@ import console from "console.so";
 console.log("Hi!");
 ```
 
+### Resources
+
+* IRC: Join the `#flog` channel on `irc.libera.chat`.
+
 ### License
 
 MIT
