@@ -1,3 +1,5 @@
 deps
 flog
+modules
 *.a
+*.json
