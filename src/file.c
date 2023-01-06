@@ -47,6 +47,9 @@ char* flog_file_read(const char* path) {
 
 size_t flog_file_n_lines(const char* path) {
   FILE* file = fopen(path, "r");
+  if (file == NULL) {
+    return 0;
+  }
   size_t lines = 0;
   if (file == NULL) {
     return lines;
@@ -62,6 +65,9 @@ size_t flog_file_n_lines(const char* path) {
 
 bool flog_file_match_module_line(const char* path, const char module[]) {
   FILE* file = fopen(path, "r");
+  if (file == NULL) {
+    return false;
+  }
   int position = 0;
   int line_length = 80;
   char line[line_length];
