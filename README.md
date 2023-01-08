@@ -7,9 +7,9 @@ minimal core.
 
 * Minimal core as a thin wrapper around QuickJS ✓
 * Executable and module manager in one WIP
-* Namespaced, officially supported standard library (`std`)
-* Third-party, scoped module area
-* Sandboxing of applications (directory-level scoping)
+* Namespaced, officially supported standard library ([flogjs/std][std])
+* Third-party, scoped module area TODO
+* Sandboxing of applications (directory-level scoping) TODO
 
 For a more extensive write-up on the design goals see [flogjs/rfcs][rfcs].
 
@@ -131,3 +131,4 @@ console.log("Hi!");
 MIT
 
 [rfcs]: https://github.com/flogjs/rfcs
+[std]: https://github.com/flogjs/std
