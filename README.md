@@ -9,8 +9,9 @@ minimal core.
 * Executable and module manager in one WIP
 * Namespaced, officially supported standard library (`std`)
 * Third-party, scoped module area
-* Hot code replacement in development mode
 * Sandboxing of applications (directory-level scoping)
+
+For a more extensive write-up on the design goals see [flogjs/rfcs][rfcs].
 
 ### Prerequisites
 
@@ -128,3 +129,5 @@ console.log("Hi!");
 ### License
 
 MIT
+
+[rfcs]: https://github.com/flogjs/rfcs
