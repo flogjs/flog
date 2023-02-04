@@ -26,8 +26,8 @@
 
 #include <stdlib.h>
 #include <linux/limits.h>
-#include <quickjs/cutils.h>
-#include <quickjs/quickjs.h>
+#include <s4/cutils.h>
+#include <s4/quickjs.h>
 
 typedef struct Engine {
   JSRuntime* runtime;

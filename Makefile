@@ -2,13 +2,13 @@ MAIN=flog
 FLAGS=-Wall -O3 -o $(MAIN) -rdynamic -lgit2 -Ideps
 SRCS=$(wildcard src/*.c src/**/*.c)
 
-QJS_DIR=deps/quickjs
-QJS_FILES=cutils.c libbf.c libregexp.c libunicode.c quickjs.c
-QJS_SRCS=$(patsubst %.c,$(QJS_DIR)/%.c,$(QJS_FILES))
-QJS_OBJS=$(patsubst %.c,%.o,$(QJS_FILES))
-QJS_OS=qjs_objs
-QJS_A=libqjs.a
-QJS_VERSION='"$(shell cat $(QJS_DIR)/VERSION)"'
+S4_DIR=deps/s4
+S4_FILES=cutils.c libregexp.c libunicode.c quickjs.c
+S4_SRCS=$(patsubst %.c,$(S4_DIR)/%.c,$(S4_FILES))
+S4_OBJS=$(patsubst %.c,%.o,$(S4_FILES))
+S4_OS=qjs_objs
+S4_A=libqjs.a
+S4_VERSION='"$(shell cat $(S4_DIR)/VERSION)"'
 
 all: $(MAIN)
 
@@ -17,19 +17,19 @@ init-submodules:
 		then git submodule update --init;\
 	fi
 
-$(QJS_OS): init-submodules
-	$(CC) -DCONFIG_VERSION=$(QJS_VERSION) -O -c $(QJS_SRCS) -lm
+$(S4_OS): init-submodules
+	$(CC) -DCONFIG_VERSION=$(S4_VERSION) -O -c $(S4_SRCS) -lm
 
-$(QJS_A): $(QJS_OS)
-	ar rcs $@ $(QJS_OBJS)
+$(S4_A): $(S4_OS)
+	ar rcs $@ $(S4_OBJS)
 	ranlib $@
 
-$(MAIN): $(QJS_A)
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(FLAGS) -lm -ldl
-	rm -f $(QJS_OBJS)
+$(MAIN): $(S4_A)
+	$(CC) -DS4_VERSION=$(S4_VERSION) -L. $(SRCS) $(S4_A) $(FLAGS) -lm -ldl
+	rm -f $(S4_OBJS)
 
 main:
-	$(CC) -DQJS_VERSION=$(QJS_VERSION) -L. $(SRCS) $(QJS_A) $(FLAGS) -lm -ldl
+	$(CC) -DS4_VERSION=$(S4_VERSION) -L. $(SRCS) $(S4_A) $(FLAGS) -lm -ldl
 
 clean:
 	rm f $(MAIN)

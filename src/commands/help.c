@@ -31,7 +31,7 @@ void line(char const* operation, char const* explanation) {
 
 int flog_command_help() {
   flog_string_print("flog %s\n", FLOG_VERSION);
-  flog_string_print("quickjs %s\n\n", QJS_VERSION);
+  flog_string_print("s4 %s\n\n", S4_VERSION);
   flog_string_print(
       "usage:  flog <file>.js              parse and execute <file>.js\n");
   flog_string_print("        flog <operation> [...]      execute operation\n");

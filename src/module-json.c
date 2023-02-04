@@ -26,7 +26,7 @@
 
 #include "file.h"
 #include "string.h"
-#include "../deps/quickjs/quickjs.h"
+#include "../deps/s4/quickjs.h"
 
 static void set_property(JSContext* context,
                          Module* module,

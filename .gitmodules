@@ -1,3 +1,3 @@
-[submodule "deps/quickjs"]
-	path = deps/quickjs
-	url = https://github.com/bellard/quickjs
+[submodule "deps/s4"]
+	path = deps/s4
+	url = https://github.com/flogjs/s4
