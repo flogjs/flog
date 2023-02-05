@@ -5,6 +5,7 @@ pub fn build(b: *std.build.Builder) void {
     const mode = b.standardReleaseOptions();
 
     const s4 = b.addStaticLibrary("s4", null);
+    s4.defineCMacro("CONFIG_VERSION", "\"2021-03-27\"");
     s4.setTarget(target);
     s4.setBuildMode(mode);
     s4.linkLibC();
