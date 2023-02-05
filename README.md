@@ -11,8 +11,6 @@ minimal core.
 * Third-party, scoped module area TODO
 * Sandboxing of applications (directory-level scoping) TODO
 
-For a more extensive write-up on the design goals see [flogjs/rfcs][rfcs].
-
 ### Prerequisites
 
 Your system needs to provide libgit2 as a library. Most Linux distributions
