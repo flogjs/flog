@@ -23,7 +23,7 @@
  */
 #ifndef FLOG_DEBUG_H_
 #define FLOG_DEBUG_H_
-inline void flog_log(const char* format, ...) {
+static inline void flog_log(const char* format, ...) {
 # ifdef DEBUG
 #include <stdarg.h>
   va_list args;

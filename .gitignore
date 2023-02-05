@@ -3,3 +3,4 @@ flog
 modules
 *.[ao]
 *.json
+zig-*
