@@ -31,5 +31,8 @@ $(MAIN): $(S4_A)
 main:
 	$(CC) -DS4_VERSION=$(S4_VERSION) -L. $(SRCS) $(S4_A) $(FLAGS) -lm -ldl
 
+debug:
+	$(CC) -DS4_VERSION=$(S4_VERSION) -L. $(SRCS) $(S4_A) $(FLAGS) -g -lm -ldl
+
 clean:
 	rm f $(MAIN)
