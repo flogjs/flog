@@ -24,7 +24,7 @@
 #ifndef FLOG_GIT_H_
 #define FLOG_GIT_H_
 
-#include <git2.h>
+#include <gitz/git2.h>
 #include "flog.h"
 
 void flog_git_init();

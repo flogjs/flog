@@ -1,0 +1,14 @@
+.{
+  .name = "flog",
+  .version = "0.1.0",
+  .dependencies = .{
+    .s4 = .{
+      .url = "https://github.com/flogjs/s4/archive/a9bc0b92727541aabd0f91f24b673d928115f47f.tar.gz",
+      .hash = "12200e486970a8e3c6f0b405c33a17cc5866ccec85e15eac9b9a3fb4f140f3cef859",
+    },
+    .libgitz = .{
+      .url = "https://github.com/flogjs/libgitz/archive/b6cac5771ca5d067174c65387836161238ff92b3.tar.gz",
+      .hash = "122007c454a89e23a42cfad6be28d86f1f55dddcee878f7d2cd8706dd467e0faff05",
+    },
+  },
+}

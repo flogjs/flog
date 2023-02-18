@@ -1,33 +1,23 @@
 const std = @import("std");
+const Builder = std.build.Builder;
 
-pub fn build(b: *std.build.Builder) void {
+pub fn build(b: *Builder) void {
     const target = b.standardTargetOptions(.{});
-    const mode = b.standardReleaseOptions();
+    const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseSafe });
 
-    const s4 = b.addStaticLibrary("s4", null);
-    s4.defineCMacro("CONFIG_VERSION", "\"2021-03-27\"");
-    s4.setTarget(target);
-    s4.setBuildMode(mode);
-    s4.linkLibC();
-    s4.addCSourceFiles(&.{
-        "deps/s4/cutils.c",
-        "deps/s4/libregexp.c",
-        "deps/s4/libunicode.c",
-        "deps/s4/quickjs.c",
-    }, &.{
-        "-Wall",
-        "-W",
-        "-Wstrict-prototypes",
-        "-Wwrite-strings",
-        "-Wno-missing-field-initializers",
+    const s4 = b.dependency("s4", .{
+        .target = target,
     });
-    const flog = b.addExecutable("flog", null);
-    flog.setTarget(target);
-    flog.setBuildMode(mode);
+
+    const libgitz = b.dependency("libgitz", .{
+        .target = target,
+    });
+
+    const flog = b.addExecutable(.{ .name = "flog", .target = target, .optimize = optimize });
     flog.install();
     flog.linkLibC();
-    flog.linkLibrary(s4);
-    flog.linkSystemLibrary("git2");
+    flog.linkLibrary(s4.artifact("s4"));
+    flog.linkLibrary(libgitz.artifact("gitz"));
     flog.addIncludePath("deps");
     flog.addCSourceFiles(&.{
         "src/app.c",
