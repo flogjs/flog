@@ -14,7 +14,7 @@ pub fn build(b: *Builder) void {
     });
 
     const libflog = b.addStaticLibrary(.{
-        .name = "flog",
+        .name = "libflog",
         .target = target,
         .optimize = optimize,
     });
