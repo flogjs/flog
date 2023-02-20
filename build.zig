@@ -3,7 +3,7 @@ const Builder = std.build.Builder;
 
 pub fn build(b: *Builder) void {
     const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseSafe });
+    const optimize = .ReleaseFast;
 
     const s4 = b.dependency("s4", .{
         .target = target,
@@ -13,12 +13,26 @@ pub fn build(b: *Builder) void {
         .target = target,
     });
 
-    const flog = b.addExecutable(.{ .name = "flog", .target = target, .optimize = optimize });
+    const libflog = b.addStaticLibrary(.{
+        .name = "libflog",
+        .target = target,
+        .optimize = optimize,
+    });
+    libflog.linkLibrary(s4.artifact("s4"));
+    libflog.installHeader("src/flog.h", "flog.h");
+    libflog.installLibraryHeaders(s4.artifact("s4"));
+    libflog.linkLibC();
+
+    const flog = b.addExecutable(.{
+        .name = "flog",
+        .target = target,
+//        .optimize = optimize,
+    });
     flog.install();
     flog.linkLibC();
-    flog.linkLibrary(s4.artifact("s4"));
+    flog.linkLibrary(libflog);
     flog.linkLibrary(libgitz.artifact("gitz"));
-    flog.addIncludePath("deps");
+    flog.addIncludePath(".");
     flog.addCSourceFiles(&.{
         "src/app.c",
         "src/database.c",

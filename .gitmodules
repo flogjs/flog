@@ -1,4 +1,0 @@
-[submodule "deps/s4"]
-	path = deps/s4
-	url = https://github.com/flogjs/s4
-	branch = clang

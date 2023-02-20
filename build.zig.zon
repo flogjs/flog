@@ -3,8 +3,8 @@
   .version = "0.1.0",
   .dependencies = .{
     .s4 = .{
-      .url = "https://github.com/flogjs/s4/archive/a9bc0b92727541aabd0f91f24b673d928115f47f.tar.gz",
-      .hash = "12200e486970a8e3c6f0b405c33a17cc5866ccec85e15eac9b9a3fb4f140f3cef859",
+      .url = "https://github.com/flogjs/s4/archive/6c3c123c4a231d46792fadf012f7417023474b11.tar.gz",
+      .hash = "122044f2476f4e093209591db66346925a8df55cbeab60700ff2d78da18230812ba3",
     },
     .libgitz = .{
       .url = "https://github.com/flogjs/libgitz/archive/52eca6c271bc097b221f0a42e848c263cff64012.tar.gz",
@@ -12,3 +12,4 @@
     },
   },
 }
+
