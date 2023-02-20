@@ -13,24 +13,16 @@ pub fn build(b: *Builder) void {
         .target = target,
     });
 
-    const libflog = b.addStaticLibrary(.{
-        .name = "libflog",
-        .target = target,
-        .optimize = optimize,
-    });
-    libflog.linkLibrary(s4.artifact("s4"));
-    libflog.installHeader("src/flog.h", "flog.h");
-    libflog.installLibraryHeaders(s4.artifact("s4"));
-    libflog.linkLibC();
-
     const flog = b.addExecutable(.{
         .name = "flog",
         .target = target,
-//        .optimize = optimize,
+        .optimize = optimize,
     });
     flog.install();
+    flog.linkLibrary(s4.artifact("s4"));
+    flog.installHeader("src/flog.h", "flog.h");
+    flog.installLibraryHeaders(s4.artifact("s4"));
     flog.linkLibC();
-    flog.linkLibrary(libflog);
     flog.linkLibrary(libgitz.artifact("gitz"));
     flog.addIncludePath(".");
     flog.addCSourceFiles(&.{
