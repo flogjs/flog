@@ -13,7 +13,7 @@ color () {
 
 for file in test/*; do
   if [ -d "$file" ]; then
-    if ./flog $file/main.js | grep -q 'x'; then
+    if zig-out/bin/flog $file/main.js | grep -q 'x'; then
       ((failed=failed+1))
       echo -n "failed "
       color $file $red

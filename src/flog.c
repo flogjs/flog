@@ -48,6 +48,9 @@ void error(const char* format, ...) {
   va_end(args);
 }
 
+void setup_debug_handlers();
+
 int main(int argc, char** argv) {
+  setup_debug_handlers();
   return argc == 1 ? flog_command_help() : flog_command_args(argc, argv);
 }
