@@ -13,21 +13,16 @@ minimal core.
 
 ### Prerequisites
 
-Your system needs to provide libgit2 as a library. Most Linux distributions
-package it.
+Flog uses `zig build` to manage dependencies and build the project. 
 
-#### Arch Linux
-
-`pacman -S libgit2`
-
-#### Debian/Ubuntu
-
-`apt-get install libgit2-dev`
+At best, [download and install Zig master](https://ziglang.org/download).
+However, we can currently only guarantee that the build works on Linux x86_64
+with the tag [0.11.0-dev.1646+3f7e9ff59][dl].
 
 ### Getting started
 
-On Linux, run `make` to compile. This will result in a `flog` executable in the
-same directory.
+To build flog, run `zig build`. This will result in a `flog` executable in the
+`zig-out/bin` directory.
 
 Create an `app.js` file in the same directory.
 
@@ -40,7 +35,7 @@ console.log("Hello, world!");
 You can now run flog with this file as the first argument.
 
 ```sh
-./flog app.js
+zig-out/bin/flog app.js
 ```
 
 Flog will download and install the standard module `console` and will execute
@@ -54,7 +49,7 @@ If you wish to explicitly install modules before use (both standard and
 third-party), run `flog install [module]`.
 
 ```sh
-./flog install std/console
+zig-out/bin/flog install std/console
 
 ```
 
@@ -130,3 +125,4 @@ MIT
 
 [rfcs]: https://github.com/flogjs/rfcs
 [std]: https://github.com/flogjs/std
+[dl]: https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.1646+3f7e9ff59.tar.xz
