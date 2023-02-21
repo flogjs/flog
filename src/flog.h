@@ -38,8 +38,8 @@
 #include <limits.h>
 #include <unistd.h>
 
-#include "../deps/s4/cutils.h"
-#include "../deps/s4/quickjs.h"
+#include <s4/cutils.h>
+#include <s4/quickjs.h>
 #include "commands/base.h"
 #include "engine.h"
 #include "database.h"
