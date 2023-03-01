@@ -22,6 +22,7 @@ pub fn build(b: *Builder) void {
     // expose s4's symbols to dynamically loaded (.so) modules
     flog.rdynamic = true;
     flog.install();
+    flog.installLibraryHeaders(s4.artifact("s4"));
     flog.linkLibrary(s4.artifact("s4"));
     flog.linkLibC();
     flog.linkLibrary(libgitz.artifact("gitz"));
