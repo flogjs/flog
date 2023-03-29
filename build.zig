@@ -23,6 +23,7 @@ pub fn build(b: *Builder) void {
     flog.rdynamic = true;
     flog.install();
     flog.installLibraryHeaders(s4.artifact("s4"));
+    flog.installLibraryHeaders(libgitz.artifact("gitz"));
     flog.linkLibrary(s4.artifact("s4"));
     flog.linkLibC();
     flog.linkLibrary(libgitz.artifact("gitz"));
